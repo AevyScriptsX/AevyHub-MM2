@@ -35,6 +35,8 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "AevyScripts_MM2"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.DisplayOrder = 999          -- Immer ganz oben
+screenGui.IgnoreGuiInset = true
 screenGui.Parent = player.PlayerGui
 
 ----------------------------------------------------------------
@@ -217,7 +219,7 @@ footer.Parent = loadingFrame
 makeDraggable(loadingFrame, loadingFrame)
 
 ----------------------------------------------------------------
--- MAIN WINDOW (erst nach dem Laden sichtbar)
+-- MAIN WINDOW
 ----------------------------------------------------------------
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainWindow"
@@ -395,7 +397,7 @@ footerMain.Parent = mainFrame
 makeDraggable(mainFrame, titleBar)
 
 ----------------------------------------------------------------
--- EXTERNER BUTTON (wird erst nach dem Laden erstellt)
+-- EXTERNER BUTTON (erst nach dem Laden)
 ----------------------------------------------------------------
 local toggleBtn = nil
 
@@ -469,7 +471,6 @@ connection = RunService.RenderStepped:Connect(function()
 
         task.wait(1.0)
 
-        -- Komplett ausfaden und DANN zerstören
         local ti = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
         TweenService:Create(loadingFrame, ti, {BackgroundTransparency = 1}):Play()
@@ -488,15 +489,12 @@ connection = RunService.RenderStepped:Connect(function()
 
         task.wait(0.7)
 
-        -- Komplett entfernen
         if loadingFrame and loadingFrame.Parent then
             loadingFrame:Destroy()
         end
 
-        -- Externen Button erstellen
         createExternalButton()
 
-        -- Hauptfenster öffnen
         mainFrame.Visible = true
         mainFrame.BackgroundTransparency = 1
         TweenService:Create(mainFrame, TweenInfo.new(0.4), {BackgroundTransparency = 0}):Play()
